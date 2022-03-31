@@ -6,7 +6,7 @@ Config.RepairMoneyType = 'cash'
 Config.UseRadial = false -- Will use qb-radial menu for entering instead of press E
 Config.allowGovPlateIndex = false -- Setting this to true will allow all vehicles to purchase gov plate index "Blue on White #3" (only for emergency vehicles otherwise)
 
-maxVehiclePerformanceUpgrades = 0 -- | All Upgrades: 0 | No Upgrades: -1 | Can be -1 to 4
+maxVehiclePerformanceUpgrades = -1 -- | All Upgrades: 0 | No Upgrades: -1 | Can be -1 to 4
 vehicleBaseRepairCost = 600
 vehicleRepairCostMultiplier = 1
 
