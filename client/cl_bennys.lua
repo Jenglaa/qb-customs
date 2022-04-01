@@ -830,7 +830,7 @@ function EnterLocation(override)
 
     SetVehicleModKit(plyVeh, 0)
     SetEntityCoords(plyVeh, ((override and override.coords) or CustomsData.coords))
-    SetEntityHeading(plyVeh, ((override and override.heading) or CustomsData.heading))
+    SetEntityHeading(plyVeh, ((override and override.coords.w) or CustomsData.coords.w))
     FreezeEntityPosition(plyVeh, true)
     SetEntityCollision(plyVeh, false, true)
 
@@ -979,31 +979,34 @@ CreateThread(function()
             local _name = location.."-customs-"..i
             local newSpot = BoxZone:Create(spot.coords, spot.length, spot.width, {
                 name = _name,
-                -- debugPoly = true,
+                debugPoly = false,
                 heading = spot.heading,
                 minZ = spot.minZ,
                 maxZ = spot.maxZ,
             })
 
             newSpot:onPlayerInOut(function(isPointInside, point)
-                if isPointInside then
-                    CustomsData = {
-                        ['location'] = location,
-                        ['spot'] = _name,
-                        ['coords'] = vector3(spot.coords.x, spot.coords.y, spot.coords.z),
-                        ['heading'] = spot.heading,
-                        ['drawtextui'] = data.drawtextui.text,
-                    }
-                    SetupInteraction()
-                    CheckForGhostVehicle()
-                elseif CustomsData['location'] == location and CustomsData['spot'] == _name then
-                    CustomsData = {}
-                    if Config.UseRadial then
-                        exports['qb-radialmenu']:RemoveOption(radialMenuItemId)
-                        radialMenuItemId = nil
-                    end
+                local veh = IsPedInAnyVehicle(PlayerPedId(), false)
+                if veh then
+                    if isPointInside then
+                        CustomsData = {
+                            ['location'] = location,
+                            ['spot'] = _name,
+                            ['coords'] = vector4(spot.coords.x, spot.coords.y, spot.coords.z, spot.coords.w),
+                            ['heading'] = spot.heading,
+                            ['drawtextui'] = data.drawtextui.text,
+                        }
+                        SetupInteraction()
+                        CheckForGhostVehicle()
+                    elseif CustomsData['location'] == location and CustomsData['spot'] == _name then
+                        CustomsData = {}
+                        if Config.UseRadial then
+                            exports['qb-radialmenu']:RemoveOption(radialMenuItemId)
+                            radialMenuItemId = nil
+                        end
 
-                    exports['qb-core']:HideText()
+                        exports['qb-core']:HideText()
+                    end
                 end
             end)
         end
